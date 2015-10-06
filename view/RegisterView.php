@@ -10,9 +10,11 @@ class RegisterView {
 	private static $messageId = "RegisterView::Message";
         private static $register = "register";
         
+        private $message = "";
+        private static $sessionSaveLocation = "\\view\\LoginView\\message";
         
 	public function userWantsToRegister() {
-		return isset($_GET[self::$register]) ;            
+		return isset($_GET[self::$register]) || isset($_POST[self::$registration]) ;            
 	}        
 	public function userRegister() {
 		return isset($_POST[self::$registration]);
@@ -24,39 +26,36 @@ class RegisterView {
         }    
 
 	private function doRegisterForm() {
-		$message = "";
+		
 		//Correct messages
-                if ($this->userRegister() && mb_strlen($this->getUserName() < 7)) {
-			$message =  "<p>Username has too few characters, at least 3 characters.</p>";
+/*                
+                var_dump(mb_strlen($this->getUserName(),'UTF-8'));
+                if ($this->userRegister() && (mb_strlen($this->getUserName(),'UTF-8') < 3)) {
+			$message =  "Username has too few characters, at least 3 characters.<br>";
 		} 
-                if ($this->userRegister() && mb_strlen($this->getPassword() < 4)) {
-			$message .=  "<p>Password has too few characters, at least 6 characters.</p>";
+                if ($this->userRegister() && (mb_strlen($this->getPassword(),'UTF-8') < 6)) {
+			$message .=  "Password has too few characters, at least 6 characters.<br>";
+		} 
+                if ($this->userRegister() && strcmp($this->getPassword(), $this->getRepeatPassword() != 0)) {
+			$message .=  "Passwords do not match.<br>";
 		} 
                 if ($this->userRegister() && $this->checkUserExist()) {
-			$message .=  "User exists, pick another username.\n";
+			$message .=  "User exists, pick another username.";
 		} 
-                
-/*                
-                else if ($this->userWantsToLogin() && $this->getRequestUserName() == "") {
-			$message =  "Username is missing";
-		} else if ($this->userWantsToLogin() && $this->getPassword() == "") {
-			$message =  "Password is missing";
-		} else if ($this->loginHasFailed === true) {
-			$message =  "Wrong name or password";
-		} else {
-			$message = $this->getSessionMessage();
-		}
 */
+               // $message = $this->getSessionMessage();
+
 		//cookies
 //		$this->unsetCookies();
 		
 		//generate HTML
-		return $this->generateRegisterFormHTML($message);
+		return $this->generateRegisterFormHTML($this->message);
 	}      
 
         
   
         
+
         
 	private function redirect($message) {
 		$_SESSION[self::$sessionSaveLocation] = $message;
@@ -100,16 +99,16 @@ class RegisterView {
         
         // temp move
 	private function checkUserExist() {
-            return true;
+            return false;
         }        
         
-	private function getRequestUserName() {
+	public function getRequestUserName() {
 		if (isset($_POST[self::$name]))
 			return trim($_POST[self::$name]);
 		return "";
 	}  
         
-	private function getUserName() {
+	public function getUserName() {
 		if (isset($_POST[self::$name]))
 			return trim($_POST[self::$name]);
 
@@ -118,9 +117,17 @@ class RegisterView {
 		return "";
 	}        
         
-	private function getPassword() {
+	public function getPassword() {
 		if (isset($_POST[self::$password]))
 			return trim($_POST[self::$password]);
 		return "";
-	}        
+	}   
+	public function getRepeatPassword() {
+		if (isset($_POST[self::$passwordRepeat]))
+			return trim($_POST[self::$passwordRepeat]);
+		return "";
+	}                
+	public function setMessage($message) {
+		$this->message = $message;
+	}                
 }

@@ -21,8 +21,8 @@ session_start();
 //Dependency injection
 $m = new \model\LoginModel();
 $v = new \view\LoginView($m);
-$r = new \view\RegisterView($m);
 $c = new \controller\LoginController($m, $v);
+
 
 
 //Controller must be run first since state is changed
@@ -32,10 +32,8 @@ $c->doControl();
 //Generate output
 $dtv = new \view\DateTimeView();
 $lv = new \view\LayoutView();
-if ($r->userWantsToRegister()){
-    $lv->renderRegister($m->isLoggedIn($v->getUserClient()),$r,$dtv);
-}
-else {
-    $lv->renderLogin($m->isLoggedIn($v->getUserClient()), $v,$dtv);
-}
+
+$c->startLoginApplikation($lv, $dtv);
+
+
 

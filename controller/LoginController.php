@@ -7,15 +7,23 @@ namespace controller;
 
 require_once("model/LoginModel.php");
 require_once("view/LoginView.php");
+require_once("model/RegisterModel.php");
+require_once("controller/RegisterController.php");
 
 class LoginController {
 
 	private $model;
 	private $view;
-
+	private $regModel;
+	private $regView;
+	private $regController;
+	// private $dtView;
+        
 	public function __construct(\model\LoginModel $model, \view\LoginView $view) {
 		$this->model = $model;
 		$this->view =  $view;
+                $this->regView = new \view\RegisterView();
+
 	}
 
 	public function doControl() {
@@ -40,4 +48,19 @@ class LoginController {
 		}
 		$this->model->renew($userClient);
 	}
+        
+    public function startLoginApplikation($lv, $dtv) {
+        $isLoggedIn = $this->model->isLoggedIn($this->view->getUserClient());
+        if ($this->regView->userWantsToRegister()){
+            $this->regModel = new \model\RegisterModel();
+                      
+            $this->regController = new \controller\RegisterController($this->regModel, $this->regView);
+            $message = $this->regController->registerUser($isLoggedIn, $lv,$dtv);
+            if (strlen($message) > 0)
+                $this->view->redirect_index ($message);
+        }
+        else {
+            $lv->renderLogin($isLoggedIn, $this->view, $dtv);
+        }        
+    }
 }
