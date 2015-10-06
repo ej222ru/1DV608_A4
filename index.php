@@ -7,7 +7,9 @@ require_once("Settings.php");
 require_once("controller/LoginController.php");
 require_once("view/DateTimeView.php");
 require_once("view/LayoutView.php");
+require_once("view/RegisterView.php");
 
+//phpinfo();
 if (Settings::DISPLAY_ERRORS) {
 	error_reporting(-1);
 	ini_set('display_errors', 'ON');
@@ -19,6 +21,7 @@ session_start();
 //Dependency injection
 $m = new \model\LoginModel();
 $v = new \view\LoginView($m);
+$r = new \view\RegisterView($m);
 $c = new \controller\LoginController($m, $v);
 
 
@@ -29,5 +32,10 @@ $c->doControl();
 //Generate output
 $dtv = new \view\DateTimeView();
 $lv = new \view\LayoutView();
-$lv->render($m->isLoggedIn($v->getUserClient()), $v, $dtv);
+if ($r->userWantsToRegister()){
+    $lv->renderRegister($m->isLoggedIn($v->getUserClient()),$r,$dtv);
+}
+else {
+    $lv->renderLogin($m->isLoggedIn($v->getUserClient()), $v,$dtv);
+}
 
