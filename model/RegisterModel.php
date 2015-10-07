@@ -9,6 +9,7 @@ class RegisterModel {
     public function saveUser($userName, $password) {
          
         $fileHandle = fopen(self::$file, 'a');
+//      $userData = $userName . "::" .password_hash($password) .PHP_EOL;        
         $userData = $userName . "::" .$password .PHP_EOL;
         fwrite($fileHandle, $userData);
         fclose($fileHandle);
