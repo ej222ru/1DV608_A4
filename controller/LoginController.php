@@ -23,7 +23,7 @@ class LoginController {
 		$this->model = $model;
 		$this->view =  $view;
                 $this->regView = new \view\RegisterView();
-
+                $this->regModel = new \model\RegisterModel();
 	}
 
 	public function doControl() {
@@ -39,7 +39,7 @@ class LoginController {
 			
 			if ($this->view->userWantsToLogin()) {
 				$uc = $this->view->getCredentials();
-				if ($this->model->doLogin($uc) == true) {
+				if ($this->model->doLogin($uc, $this->regModel) == true) {
 					$this->view->setLoginSucceeded();
 				} else {
 					$this->view->setLoginFailed();
@@ -52,9 +52,9 @@ class LoginController {
     public function startLoginApplikation($lv, $dtv) {
         $isLoggedIn = $this->model->isLoggedIn($this->view->getUserClient());
         if ($this->regView->userWantsToRegister()){
-            $this->regModel = new \model\RegisterModel();
+            
                       
-            $this->regController = new \controller\RegisterController($this->regModel, $this->regView);
+            $this->regController = new \controller\RegisterController($this->regModel, $this->regView, $this->view);
             $message = $this->regController->registerUser($isLoggedIn, $lv,$dtv);
             if (strlen($message) > 0)
                 $this->view->redirect_index ($message);

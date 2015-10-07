@@ -4,7 +4,6 @@ namespace model;
 
 class RegisterModel {
     
-    private static $folder = "data/";
     private static $file = "data/users.txt";
     
     public function saveUser($userName, $password) {

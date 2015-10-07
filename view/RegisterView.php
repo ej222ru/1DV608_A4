@@ -28,35 +28,8 @@ class RegisterView {
         }    
 
 	private function doRegisterForm() {
-		
-		//Correct messages
-/*                
-                var_dump(mb_strlen($this->getUserName(),'UTF-8'));
-                if ($this->userRegister() && (mb_strlen($this->getUserName(),'UTF-8') < 3)) {
-			$message =  "Username has too few characters, at least 3 characters.<br>";
-		} 
-                if ($this->userRegister() && (mb_strlen($this->getPassword(),'UTF-8') < 6)) {
-			$message .=  "Password has too few characters, at least 6 characters.<br>";
-		} 
-                if ($this->userRegister() && strcmp($this->getPassword(), $this->getRepeatPassword() != 0)) {
-			$message .=  "Passwords do not match.<br>";
-		} 
-                if ($this->userRegister() && $this->checkUserExist()) {
-			$message .=  "User exists, pick another username.";
-		} 
-*/
-               // $message = $this->getSessionMessage();
-
-		//cookies
-//		$this->unsetCookies();
-		
-		//generate HTML
 		return $this->generateRegisterFormHTML($this->message);
 	}      
-
-        
-  
-        
 
         
 	private function redirect($message) {
@@ -64,14 +37,7 @@ class RegisterView {
 		$actual_link = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
 		header("Location: $actual_link");
 	}
-        private function getSessionMessage() {
-            if (isset($_SESSION[self::$sessionSaveLocation])) {
-                    $message = $_SESSION[self::$sessionSaveLocation];
-                    unset($_SESSION[self::$sessionSaveLocation]);
-                    return $message;
-            }
-            return "";
-	}
+
  	private function generateRegisterFormHTML($message) {
 		return 
                         "<h2>Register new user</h2>
@@ -98,12 +64,6 @@ class RegisterView {
 		";
 	}             
         
-        
-        // temp move
-	private function checkUserExist() {
-            return false;
-        }        
-        
 	public function getRequestUserName() {
                 if ($this->adjustedRequestUserName != "")
                     return $this->adjustedRequestUserName;
@@ -119,9 +79,6 @@ class RegisterView {
 	public function getUserName() {
 		if (isset($_POST[self::$name]))
 			return trim($_POST[self::$name]);
-
-//		if (isset($_COOKIE[self::$cookieName]))
-//			return trim($_COOKIE[self::$cookieName]);
 		return "";
 	}        
 

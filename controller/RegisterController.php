@@ -6,10 +6,12 @@ class RegisterController {
 
 	private $model;
 	private $view;
+	private $loginView;
 
-	public function __construct(\model\RegisterModel $model, \view\RegisterView $view) {
+	public function __construct(\model\RegisterModel $model, \view\RegisterView $view, \view\LoginView $loginView) {
 		$this->model = $model;
 		$this->view =  $view;
+		$this->loginView =  $loginView;
 	}    
         public function registerUser($isLoggedIn, $lv, $dtv) {
                 $message = "";
@@ -37,6 +39,7 @@ class RegisterController {
                     else if ($userRegister) {
                         $this->model->saveUser($this->view->getUserName(), $this->view->getPassword());
                         $message .= "Registered new user.";
+                        $this->loginView->setAdjustedRequestUserName(strip_tags($this->view->getUserName()));
                         $savedOK = true;
                         // render login
                     }

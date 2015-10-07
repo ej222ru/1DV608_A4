@@ -15,6 +15,8 @@ require_once("UserClient.php");
 
 class LoginModel {
 
+        private static $file = "data/users.txt";    
+        
 	//TODO: Remove static to enable several sessions
 	private static $sessionUserLocation = "LoginModel::loggedInUser";
 
@@ -60,11 +62,18 @@ class LoginModel {
 	 * @param  UserCredentials $uc
 	 * @return boolean
 	 */
-	public function doLogin(UserCredentials $uc) {
+	public function doLogin(UserCredentials $uc, \model\RegisterModel $regModel) {
 		
 		$this->tempCredentials = $this->tempDAL->load($uc->getName());
-
-		$loginByUsernameAndPassword = \Settings::USERNAME === $uc->getName() && \Settings::PASSWORD === $uc->getPassword();
+                $loginByUsernameAndPassword = false;
+                $userData = $regModel->getUser($uc->getName());
+                if ($userData) {
+                    $userDataSep = explode("::", $userData);
+                    $loginByUsernameAndPassword = (strcmp($uc->getName(), $userDataSep[0]) == 0) && (strcmp(trim($uc->getPassword()), trim($userDataSep[1])) == 0);
+                }
+                else {
+                    $loginByUsernameAndPassword = false;
+                }
 		$loginByTemporaryCredentials = $this->tempCredentials != null && $this->tempCredentials->isValid($uc->getTempPassword());
 
 		if ( $loginByUsernameAndPassword || $loginByTemporaryCredentials) {
@@ -101,4 +110,17 @@ class LoginModel {
 		}
 	}
 	
+        
+    public function getUser($userName) {
+        $fileHandle = fopen(self::$file, 'r');
+        do{
+            $userData = fgets($fileHandle);
+            $userDataSep = explode("::", $userData);
+            if (strcmp($userName, $userDataSep[0]) == 0){
+                fclose($fileHandle);
+                return $userData;
+            }
+        }while(strlen($userData) > 0);
+        fclose($fileHandle);
+    }           
 }

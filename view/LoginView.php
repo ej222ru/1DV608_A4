@@ -18,13 +18,13 @@ class LoginView {
 	private static $CookiePassword = "LoginView::CookiePassword";
 	private static $keep = "LoginView::KeepMeLoggedIn";
 	private static $messageId = "LoginView::Message";
+        private static $adjustedRequestUserName = "LoginView::adjustedRequestUserName";
 
 	/**
 	 * This name is used in session
 	 * @var string
 	 */
 	private static $sessionSaveLocation = "\\view\\LoginView\\message";
-
 	/**
 	 * view state set by controller through setters
 	 * @var boolean
@@ -96,7 +96,7 @@ class LoginView {
 	 * call this if login succeeds
 	 */
 	public function setLoginSucceeded() {
-		$this->loginHasSucceeded = true;	
+		$this->loginHasSucceeded = true;
 	}
 
 	/**
@@ -251,12 +251,17 @@ class LoginView {
 		";
 	}
 
-	private function getRequestUserName() {
+	public function getRequestUserName() {
+          	if (isset($_COOKIE[self::$adjustedRequestUserName]))
+                    return trim($_COOKIE[self::$adjustedRequestUserName]);
 		if (isset($_POST[self::$name]))
 			return trim($_POST[self::$name]);
 		return "";
-	}
-
+	}  
+        
+	public function setAdjustedRequestUserName($name) {
+                setcookie(self::$adjustedRequestUserName, $name,  time() + 2); 
+        }
 	private function getUserName() {
 		if (isset($_POST[self::$name]))
 			return trim($_POST[self::$name]);
