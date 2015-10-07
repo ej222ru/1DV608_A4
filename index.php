@@ -8,6 +8,7 @@ require_once("controller/LoginController.php");
 require_once("view/DateTimeView.php");
 require_once("view/LayoutView.php");
 require_once("view/RegisterView.php");
+require_once("model/Password.php");
 
 //phpinfo();
 if (Settings::DISPLAY_ERRORS) {

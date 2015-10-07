@@ -1,4 +1,1 @@
 Erland::111111
-Otto::123456
-Admin::Password
-

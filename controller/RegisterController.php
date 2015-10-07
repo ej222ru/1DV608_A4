@@ -41,7 +41,6 @@ class RegisterController {
                         $message .= "Registered new user.";
                         $this->loginView->setAdjustedRequestUserName(strip_tags($this->view->getUserName()));
                         $savedOK = true;
-                        // render login
                     }
                 }                
                 $this->view->setMessage($message);

@@ -69,9 +69,9 @@ class LoginModel {
                 $userData = $regModel->getUser($uc->getName());
                 if ($userData) {
                     $userDataSep = explode("::", $userData);
-                   //  @pwDecrypt = paswword_verify( trim($uc->getPassword(), trim($userDataSep[1])); 
-                   //  $loginByUsernameAndPassword = (strcmp($uc->getName(), $userDataSep[0]) == 0) && @pwDecrypt);
-                    $loginByUsernameAndPassword = (strcmp($uc->getName(), $userDataSep[0]) == 0) && (strcmp(trim($uc->getPassword()), trim($userDataSep[1])) == 0);
+                    $pwDecrypt = password_verify( trim($uc->getPassword()), trim($userDataSep[1])); 
+                    $loginByUsernameAndPassword = (strcmp($uc->getName(), $userDataSep[0]) == 0) && $pwDecrypt;
+                   // $loginByUsernameAndPassword = (strcmp($uc->getName(), $userDataSep[0]) == 0) && (strcmp(trim($uc->getPassword()), trim($userDataSep[1])) == 0);
                 }
                 else {
                     $loginByUsernameAndPassword = false;
