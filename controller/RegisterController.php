@@ -15,7 +15,11 @@ class RegisterController {
                 $message = "";
                 $savedOK = false;
                 $userRegister = $this->view->userRegister();
-                
+                 if (preg_match('/[^A-Za-z0-9.#\\-$]/', $this->view->getUserName())) {
+                    $message =  "Username contains invalid characters.";
+                    $this->view->setAdjustedRequestUserName(strip_tags($this->view->getUserName()));
+                }
+                        
                 if ($userRegister && (mb_strlen($this->view->getUserName(),'UTF-8') < 3)) {
 			$message =  "Username has too few characters, at least 3 characters.<br>";
 		} 
@@ -39,13 +43,10 @@ class RegisterController {
                 }                
                 $this->view->setMessage($message);
                 
-                if ($savedOK)
-                {
+                if ($savedOK) {
                     return $message;
-                    //$this->view->redirect_index($message);
                 }
-                else
-                {
+                else {
                     $lv->renderRegister($isLoggedIn,$this->view,$dtv);
                 }
         }

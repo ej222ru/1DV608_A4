@@ -10,8 +10,10 @@ class RegisterView {
 	private static $messageId = "RegisterView::Message";
         private static $register = "register";
         
-        private $message = "";
         private static $sessionSaveLocation = "\\view\\LoginView\\message";
+
+        private $message = "";
+        private $adjustedRequestUserName = "";
         
 	public function userWantsToRegister() {
 		return isset($_GET[self::$register]) || isset($_POST[self::$registration]) ;            
@@ -103,11 +105,17 @@ class RegisterView {
         }        
         
 	public function getRequestUserName() {
+                if ($this->adjustedRequestUserName != "")
+                    return $this->adjustedRequestUserName;
 		if (isset($_POST[self::$name]))
 			return trim($_POST[self::$name]);
 		return "";
 	}  
         
+	public function setAdjustedRequestUserName($name) {
+		$this->adjustedRequestUserName = $name;
+        }
+                
 	public function getUserName() {
 		if (isset($_POST[self::$name]))
 			return trim($_POST[self::$name]);
@@ -116,7 +124,7 @@ class RegisterView {
 //			return trim($_COOKIE[self::$cookieName]);
 		return "";
 	}        
-        
+
 	public function getPassword() {
 		if (isset($_POST[self::$password]))
 			return trim($_POST[self::$password]);
